@@ -17,26 +17,69 @@ WORKFLOW_DIR = Path("/opt/comfy-workflows")
 # Then, depending on the "variants", it will either auto-select or prompt the user.
 
 MODEL_FAMILIES = [
-    # --- Hunyuan 1.5 ---
+    # --- Qwen Image ---
     {
-        "name": "HunyuanVideo 1.5 - Image to Video (720p)",
-        "keywords": ["Hunyuan", "i2v"],
-        "script": "get_hunyuan15.sh",
+        "name": "Qwen Image (Base 20B)",
+        "keywords": ["Qwen-Image"],
+        # Exclude "LoRA" and "Edit" to differentiate from the other Qwen families
+        "exclude_keywords": ["LoRA", "Edit"], 
+        "script": "get_qwen_image.sh",
         "variants": [
             {
-                "name": "Standard (FP16)", 
-                "args": ["common", "720p-i2v", "lora"]
+                "name": "BF16 (Standard / High Quality)", 
+                "args": ["1 bf16"]
+            },
+            {
+                "name": "FP8 (Compressed / Low Disk Usage)", 
+                "args": ["1"]
             }
         ]
     },
     {
-        "name": "HunyuanVideo 1.5 - Text to Video (720p)",
-        "keywords": ["Hunyuan", "t2v"],
-        "script": "get_hunyuan15.sh",
+        "name": "Qwen Image + Lightning LoRA (4-steps)",
+        "keywords": ["Qwen-Image", "LoRA"],
+        "script": "get_qwen_image.sh",
         "variants": [
             {
-                "name": "Standard (FP16)", 
-                "args": ["common", "720p-t2v", "lora"]
+                "name": "BF16 (Standard / High Quality)", 
+                "args": ["1 bf16", "3"]
+            },
+            {
+                "name": "FP8 (Compressed / Low Disk Usage)", 
+                "args": ["1", "3"]
+            }
+        ]
+    },
+
+    # --- Qwen Edit ---
+    {
+        "name": "Qwen Image Edit (Base)",
+        "keywords": ["Qwen-Image-Edit"],
+        "exclude_keywords": ["LoRA"],
+        "script": "get_qwen_image.sh",
+        "variants": [
+            {
+                "name": "BF16 (Standard / High Quality)", 
+                "args": ["2 bf16"]
+            },
+            {
+                "name": "FP8 (Compressed / Low Disk Usage)", 
+                "args": ["2"]
+            }
+        ]
+    },
+    {
+        "name": "Qwen Image Edit + Lightning LoRA",
+        "keywords": ["Qwen-Image-Edit", "LoRA"],
+        "script": "get_qwen_image.sh",
+        "variants": [
+            {
+                "name": "BF16 (Standard / High Quality)", 
+                "args": ["2 bf16", "4"]
+            },
+            {
+                "name": "FP8 (Compressed / Low Disk Usage)", 
+                "args": ["2", "4"]
             }
         ]
     },
@@ -73,72 +116,29 @@ MODEL_FAMILIES = [
         ]
     },
 
-    # --- Qwen Image ---
+    # --- Hunyuan 1.5 ---
     {
-        "name": "Qwen Image + Lightning LoRA (4-steps)",
-        "keywords": ["Qwen-Image", "LoRA"],
-        "script": "get_qwen_image.sh",
+        "name": "HunyuanVideo 1.5 - Image to Video (720p)",
+        "keywords": ["Hunyuan", "i2v"],
+        "script": "get_hunyuan15.sh",
         "variants": [
             {
-                "name": "BF16 (Standard / High Quality)", 
-                "args": ["1 bf16", "3"]
-            },
-            {
-                "name": "FP8 (Compressed / Low Disk Usage)", 
-                "args": ["1", "3"]
+                "name": "Standard (FP16)", 
+                "args": ["common", "720p-i2v", "lora"]
             }
         ]
     },
     {
-        "name": "Qwen Image (Base 20B)",
-        "keywords": ["Qwen-Image"],
-        # Exclude "LoRA" and "Edit" to differentiate from the other Qwen families
-        "exclude_keywords": ["LoRA", "Edit"], 
-        "script": "get_qwen_image.sh",
+        "name": "HunyuanVideo 1.5 - Text to Video (720p)",
+        "keywords": ["Hunyuan", "t2v"],
+        "script": "get_hunyuan15.sh",
         "variants": [
             {
-                "name": "BF16 (Standard / High Quality)", 
-                "args": ["1 bf16"]
-            },
-            {
-                "name": "FP8 (Compressed / Low Disk Usage)", 
-                "args": ["1"]
+                "name": "Standard (FP16)", 
+                "args": ["common", "720p-t2v", "lora"]
             }
         ]
     },
-
-    # --- Qwen Edit ---
-    {
-        "name": "Qwen Image Edit + Lightning LoRA",
-        "keywords": ["Qwen-Image-Edit", "LoRA"],
-        "script": "get_qwen_image.sh",
-        "variants": [
-            {
-                "name": "BF16 (Standard / High Quality)", 
-                "args": ["2 bf16", "4"]
-            },
-            {
-                "name": "FP8 (Compressed / Low Disk Usage)", 
-                "args": ["2", "4"]
-            }
-        ]
-    },
-    {
-        "name": "Qwen Image Edit (Base)",
-        "keywords": ["Qwen-Image-Edit"],
-        "exclude_keywords": ["LoRA"],
-        "script": "get_qwen_image.sh",
-        "variants": [
-            {
-                "name": "BF16 (Standard / High Quality)", 
-                "args": ["2 bf16"]
-            },
-            {
-                "name": "FP8 (Compressed / Low Disk Usage)", 
-                "args": ["2"]
-            }
-        ]
-    }
 ]
 
 def check_dependencies():
