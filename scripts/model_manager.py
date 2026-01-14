@@ -11,106 +11,133 @@ from pathlib import Path
 SCRIPT_DIR = Path("/opt")
 WORKFLOW_DIR = Path("/opt/comfy-workflows")
 
-# --- Mappings ---
-WORKFLOW_MAPPINGS = [
-    # --- High Precision (BF16/FP16) ---
-    # Wan 2.2 FP16
+# --- Model Families Configuration ---
+# Group workflows by "Functionality". 
+# The manager will scan for *any* workflow matching "keywords" to enable the entry.
+# Then, depending on the "variants", it will either auto-select or prompt the user.
+
+MODEL_FAMILIES = [
+    # --- Hunyuan 1.5 ---
     {
-        "keywords": ["Wan2.2", "I2V", "FP16"], 
-        "script": "get_wan22.sh", 
-        "args": ["common", "14b-i2v", "lora", "fp16"],
-        "name": "Wan 2.2 - Image to Video (14B) - FP16"
+        "name": "HunyuanVideo 1.5 - Image to Video (720p)",
+        "keywords": ["Hunyuan", "i2v"],
+        "script": "get_hunyuan15.sh",
+        "variants": [
+            {
+                "name": "Standard (FP16)", 
+                "args": ["common", "720p-i2v", "lora"]
+            }
+        ]
     },
     {
-        "keywords": ["Wan2.2", "T2V", "FP16"], 
-        "script": "get_wan22.sh", 
-        "args": ["common", "14b-t2v", "lora", "fp16"],
-        "name": "Wan 2.2 - Text to Video (14B) - FP16"
+        "name": "HunyuanVideo 1.5 - Text to Video (720p)",
+        "keywords": ["Hunyuan", "t2v"],
+        "script": "get_hunyuan15.sh",
+        "variants": [
+            {
+                "name": "Standard (FP16)", 
+                "args": ["common", "720p-t2v", "lora"]
+            }
+        ]
     },
 
-    # Qwen Image BF16
+    # --- Wan 2.2 ---
     {
-        "keywords": ["Qwen-Image", "LoRA", "BF16"],
-        "script": "get_qwen_image.sh", 
-        "args": ["3", "bf16"], 
-        "name": "Qwen Image + Lightning LoRA (4-steps) - BF16"
+        "name": "Wan 2.2 - Image to Video (14B)",
+        "keywords": ["Wan2.2", "I2V"],
+        "script": "get_wan22.sh",
+        "variants": [
+            {
+                "name": "FP16 (Standard / High Quality)", 
+                "args": ["common fp16", "14b-i2v fp16", "lora"]
+            },
+            {
+                "name": "FP8 (Compressed / Low Disk Usage)", 
+                "args": ["common", "14b-i2v", "lora"]
+            }
+        ]
     },
     {
-        "keywords": ["Qwen-Image", "BF16"],
-        "script": "get_qwen_image.sh", 
-        "args": ["1", "bf16"], 
-        "name": "Qwen Image (Base 20B) - BF16"
-    },
-
-    # Qwen Edit BF16
-    {
-         "keywords": ["Qwen-Image-Edit", "LoRA", "BF16"],
-         "script": "get_qwen_image.sh",
-         "args": ["4", "bf16"],
-         "name": "Qwen Image Edit + Lightning LoRA - BF16"
-    },
-    {
-         "keywords": ["Qwen-Image-Edit", "BF16"],
-         "script": "get_qwen_image.sh",
-         "args": ["2", "bf16"], 
-         "name": "Qwen Image Edit (Base) - BF16"
-    },
-
-    # --- Standard (FP8) ---
-    # Hunyuan 1.5
-    {
-        "keywords": ["Hunyuan", "i2v"], 
-        "script": "get_hunyuan15.sh", 
-        "args": ["common", "720p-i2v", "lora"],
-        "name": "HunyuanVideo 1.5 - Image to Video (720p)"
-    },
-    {
-        "keywords": ["Hunyuan", "t2v"], 
-        "script": "get_hunyuan15.sh", 
-        "args": ["common", "720p-t2v", "lora"],
-        "name": "HunyuanVideo 1.5 - Text to Video (720p)"
-    },
-    
-    # Wan 2.2
-    {
-        "keywords": ["Wan2.2", "I2V", "A14B"], 
-        "script": "get_wan22.sh", 
-        "args": ["common", "14b-i2v", "lora"],
-        "name": "Wan 2.2 - Image to Video (14B)"
-    },
-    {
-        "keywords": ["Wan2.2", "T2V", "A14B"], 
-        "script": "get_wan22.sh", 
-        "args": ["common", "14b-t2v", "lora"],
-        "name": "Wan 2.2 - Text to Video (14B)"
+        "name": "Wan 2.2 - Text to Video (14B)",
+        "keywords": ["Wan2.2", "T2V"],
+        "script": "get_wan22.sh",
+        "variants": [
+            {
+                "name": "FP16 (Standard / High Quality)", 
+                "args": ["common fp16", "14b-t2v fp16", "lora"]
+            },
+            {
+                "name": "FP8 (Compressed / Low Disk Usage)", 
+                "args": ["common", "14b-t2v", "lora"]
+            }
+        ]
     },
 
-    # Qwen Image
+    # --- Qwen Image ---
     {
+        "name": "Qwen Image + Lightning LoRA (4-steps)",
         "keywords": ["Qwen-Image", "LoRA"],
-        "script": "get_qwen_image.sh", 
-        "args": ["3"], # 3 = Qwen-Image-Lightning LoRA
-        "name": "Qwen Image + Lightning LoRA (4-steps)"
+        "script": "get_qwen_image.sh",
+        "variants": [
+            {
+                "name": "BF16 (Standard / High Quality)", 
+                "args": ["1 bf16", "3"]
+            },
+            {
+                "name": "FP8 (Compressed / Low Disk Usage)", 
+                "args": ["1", "3"]
+            }
+        ]
     },
     {
+        "name": "Qwen Image (Base 20B)",
         "keywords": ["Qwen-Image"],
-        "script": "get_qwen_image.sh", 
-        "args": ["1"], # 1 = Qwen-Image (20B)
-        "name": "Qwen Image (Base 20B)"
+        # Exclude "LoRA" and "Edit" to differentiate from the other Qwen families
+        "exclude_keywords": ["LoRA", "Edit"], 
+        "script": "get_qwen_image.sh",
+        "variants": [
+            {
+                "name": "BF16 (Standard / High Quality)", 
+                "args": ["1 bf16"]
+            },
+            {
+                "name": "FP8 (Compressed / Low Disk Usage)", 
+                "args": ["1"]
+            }
+        ]
     },
 
-    # Qwen Edit
+    # --- Qwen Edit ---
     {
-         "keywords": ["Qwen-Image-Edit", "LoRA"],
-         "script": "get_qwen_image.sh",
-         "args": ["4"], # 4 = Qwen-Image-Edit-Lightning LoRA
-         "name": "Qwen Image Edit + Lightning LoRA"
+        "name": "Qwen Image Edit + Lightning LoRA",
+        "keywords": ["Qwen-Image-Edit", "LoRA"],
+        "script": "get_qwen_image.sh",
+        "variants": [
+            {
+                "name": "BF16 (Standard / High Quality)", 
+                "args": ["2 bf16", "4"]
+            },
+            {
+                "name": "FP8 (Compressed / Low Disk Usage)", 
+                "args": ["2", "4"]
+            }
+        ]
     },
     {
-         "keywords": ["Qwen-Image-Edit"],
-         "script": "get_qwen_image.sh",
-         "args": ["2"], # 2 = Qwen-Image-Edit 2511
-         "name": "Qwen Image Edit (Base)"
+        "name": "Qwen Image Edit (Base)",
+        "keywords": ["Qwen-Image-Edit"],
+        "exclude_keywords": ["LoRA"],
+        "script": "get_qwen_image.sh",
+        "variants": [
+            {
+                "name": "BF16 (Standard / High Quality)", 
+                "args": ["2 bf16"]
+            },
+            {
+                "name": "FP8 (Compressed / Low Disk Usage)", 
+                "args": ["2"]
+            }
+        ]
     }
 ]
 
@@ -131,72 +158,88 @@ def run_dialog(args):
         except subprocess.CalledProcessError:
             return None # User cancelled
 
-def find_workflows():
-    """Scans workflow directory and maps them to download actions."""
+def find_available_families():
+    """
+    Scans workflow directory and identifies which Model Families are relevant 
+    (i.e., we have workflows for them).
+    """
     if not WORKFLOW_DIR.exists():
-        run_dialog(["--msgbox", f"Error: Workflow directory not found at:\n{WORKFLOW_DIR}\n\nMake sure you are running inside the Docker container.", "12", "60"])
+        run_dialog(["--msgbox", f"Error: Workflow directory not found at:\n{WORKFLOW_DIR}", "12", "60"])
         sys.exit(1)
-        return []
 
-    found_workflows = []
+    available_families = []
     
-    for json_file in WORKFLOW_DIR.glob("*.json"):
-        filename = json_file.name
-        best_match = None
-        
-        for mapping in WORKFLOW_MAPPINGS:
-            # Check for keyword match
-            if all(k in filename for k in mapping["keywords"]):
-                # Conflict resolution for Qwen Edit vs Qwen Image
-                if "Qwen-Image" in mapping["keywords"] and "Edit" not in mapping["keywords"]:
-                     if "Edit" in filename:
-                         continue 
+    # Get all json filenames once
+    workflow_files = [f.name for f in WORKFLOW_DIR.glob("*.json")]
+    
+    for family in MODEL_FAMILIES:
+        # Check if ANY workflow matches this family's criteria
+        for filename in workflow_files:
+            # Check mandatory keywords
+            if not all(k in filename for k in family["keywords"]):
+                continue
                 
-                best_match = mapping
-                break
-        
-        if best_match:
-            found_workflows.append({
-                "file": filename,
-                "config": best_match
-            })
-        else:
-            found_workflows.append({
-                "file": filename,
-                "config": {
-                    "name": f"Unknown: {filename}",
-                    "script": None,
-                    "args": []
-                }
-            })
+            # Check exclusions
+            if "exclude_keywords" in family:
+                if any(ek in filename for ek in family["exclude_keywords"]):
+                    continue
             
-    found_workflows.sort(key=lambda x: x["config"]["name"])
-    return found_workflows
+            # If we found a match, this family is available.
+            available_families.append(family)
+            break
+            
+    return available_families
+
+def select_variant(family):
+    """
+    If a family has multiple variants (e.g. FP8 vs FP16), prompt the user.
+    Otherwise return the single variant.
+    """
+    variants = family["variants"]
+    
+    if len(variants) == 1:
+        return variants[0]
+        
+    # Construct menu for variants
+    menu_items = []
+    for i, v in enumerate(variants):
+        menu_items.extend([str(i), v["name"]])
+        
+    choice = run_dialog([
+        "--clear", "--backtitle", f"Configuration for: {family['name']}",
+        "--title", "Select Precision / Variant",
+        "--cancel-label", "Back",
+        "--menu", "Choose which version to download:", "15", "60", "5"
+    ] + menu_items)
+    
+    if not choice:
+        return None
+        
+    return variants[int(choice)]
 
 def execute_download(script_name, args):
-    """Executes the download script using dialog --programbox."""
+    """Executes the download script using subprocess."""
     script_path = SCRIPT_DIR / script_name
     
     if not script_path.exists():
-        script_path = Path(script_name)
-        if not script_path.exists():
+        # Fallback to local check or error
+        if not Path(script_name).exists():
              run_dialog(["--msgbox", f"Script not found:\n{script_name}", "10", "60"])
              return
 
+    # args is a list of command strings like ["common fp16", "lora"]
+    # We construct the full command: "bash script.sh common fp16 && bash script.sh lora"
     cmds = []
-    for arg in args:
-        cmds.append(f"bash {script_path} {arg}")
+    for arg_str in args:
+        cmds.append(f"bash {script_path} {arg_str}")
         
     full_cmd = " && ".join(cmds)
     
-    # Run directly in terminal to allow native progress bars (TTY)
-    # We clear screen first to make it look clean
     subprocess.run(["clear"])
     print(f"Executing: {full_cmd}")
     print("-" * 60)
     
     try:
-        # Use shell=True so && and bash work expectedly
         subprocess.run(full_cmd, shell=True)
     except KeyboardInterrupt:
         print("\nProcess interrupted by user.")
@@ -208,44 +251,48 @@ def main():
     check_dependencies()
     
     while True:
-        workflows = find_workflows()
+        families = find_available_families()
         
+        if not families:
+            run_dialog(["--msgbox", "No matching workflows found in directory.", "8", "40"])
+            sys.exit(0)
+
         menu_items = []
-        for i, wf in enumerate(workflows):
-            menu_items.extend([str(i), f"{wf['config']['name']}"])
+        for i, f in enumerate(families):
+            menu_items.extend([str(i), f["name"]])
 
         choice = run_dialog([
             "--clear", "--backtitle", "AMD Ryzen AI Max \"Strix Halo\" ComfyUI Model Manager",
-            "--title", "Select Workflow to Download Models",
+            "--title", "Model Manager",
             "--cancel-label", "Exit",
-            "--menu", "Select a workflow to install dependencies for:", "30", "120", "20"
+            "--menu", "Select a Model Family to download dependencies for:", "20", "80", "15"
         ] + menu_items)
-
 
         if not choice:
             subprocess.run(["clear"])
             sys.exit(0)
             
-        selected = workflows[int(choice)]
-        config = selected["config"]
+        selected_family = families[int(choice)]
         
-        if not config["script"]:
-             run_dialog(["--msgbox", f"No download script mapped for:\n{selected['file']}", "10", "60"])
-             continue
-             
+        # Step 2: Select Variant (FP8 vs FP16/BF16)
+        variant = select_variant(selected_family)
+        
+        if not variant:
+            continue # User went back
+            
+        # Confirmation
         confirm_msg = (
-            f"Workflow: {selected['file']}\n"
-            f"Action:   Download dependencies using {config['script']}\n"
-            f"Targets:  {', '.join(config['args'])}\n\n"
+            f"Model:   {selected_family['name']}\n"
+            f"Variant: {variant['name']}\n\n"
+            f"This will run '{selected_family['script']}' with args:\n"
+            f"{variant['args']}\n\n"
             "Proceed?"
         )
         
         try:
-            subprocess.run(["dialog", "--yesno", confirm_msg, "12", "70"], check=True)
+            subprocess.run(["dialog", "--yesno", confirm_msg, "15", "60"], check=True)
             # Exit code 0 means Yes
-            execute_download(config["script"], config["args"])
-            
-            run_dialog(["--msgbox", "Download process finished.\nCheck output for any errors.", "8", "50"])
+            execute_download(selected_family["script"], variant["args"])
             
         except subprocess.CalledProcessError:
             pass # No/Cancel
