@@ -62,6 +62,12 @@ toolbox enter strix-halo-comfyui
 
 Once inside, you have access to a full ROCm environment with PyTorch, ComfyUI, and helper scripts in `/opt`.
 
+> [!IMPORTANT]
+> The included `start_comfy_ui` alias launches ComfyUI with `--bf16-vae`, `--disable-mmap`, and `--cache-none`.
+> *   **`--bf16-vae`**: Prevents OOM during VAE decoding.
+> *   **`--disable-mmap`**: **Critical for Strix Halo (gfx1151)**. Memory mapping above 64GB is currently very slow due to a ROCm issue; disabling it prevents performance degradation and hangs.
+> *   **`--cache-none`**: Disables model caching to manage the unified memory more aggressively (`GTT` vs `RAM`).
+
 ### 2.3. Updating the Toolbox
 
 To update the container image (e.g., for newer ROCm nightly builds) without deleting your downloaded models (which should be stored in your HOME), use the provided refresh script found in the root of this repo:

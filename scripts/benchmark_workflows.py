@@ -226,7 +226,7 @@ def main():
                 sys.executable, "main.py",
                 "--port", server_port,
                 "--output-directory", comfy_outputs_dir,
-                "--disable-mmap", "--fp16-vae"
+                "--disable-mmap", "--bf16-vae", "--cache-none"
             ]
             
             log_file = open("server.log", "w") # Overwrite log for each run
