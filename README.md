@@ -4,6 +4,15 @@ A Fedora **toolbox** image with a full **ROCm environment** (TheRock Nightlies /
 
 This repository provides a pre-configured Docker container to run **ComfyUI** with validated workflows on the **AMD Ryzen AI Max** (64GB-128GB).
 
+---
+
+### 📦 Project Context
+
+This repository is part of the **[Strix Halo AI Toolboxes](https://strix-halo-toolboxes.com)** project. Check out the website for an overview of all toolboxes, tutorials, and host configuration guides.
+
+### ❤️ Support
+
+This is a hobby project maintained in my spare time. If you find these toolboxes and tutorials useful, you can **[buy me a coffee](https://buymeacoffee.com/dcapitellau)** to support the work! ☕
 
 ## Watch the YouTube Video
 
