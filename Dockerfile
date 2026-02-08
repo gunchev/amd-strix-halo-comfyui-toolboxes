@@ -1,4 +1,4 @@
-FROM registry.fedoraproject.org/fedora:rawhide
+FROM registry.fedoraproject.org/fedora:43
 
 # Base packages (keep compilers/headers for Triton JIT at runtime)
 RUN --mount=type=cache,target=/var/cache/libdnf5/ \
