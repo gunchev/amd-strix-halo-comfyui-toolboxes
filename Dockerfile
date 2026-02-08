@@ -6,7 +6,6 @@ RUN --mount=type=cache,target=/var/cache/libdnf5/ \
 
 RUN --mount=type=cache,target=/var/cache/libdnf5/ \
     dnf -y --setopt=keepcache=1 --setopt=install_weak_deps=False --nodocs install \
-    ca-certificates curl bash \
     libdrm-devel python3.13 python3.13-devel git rsync libatomic \
     gcc gcc-c++ binutils procps-ng make git ffmpeg-free nano dialog uv
 
