@@ -11,7 +11,6 @@ RUN --mount=type=cache,target=/var/cache/libdnf5/ \
     gcc gcc-c++ binutils procps-ng make git ffmpeg-free nano dialog uv
 
 # Python venv
-ENV UV_CACHE_DIR=/root/.cache/uv
 ENV UV_LINK_MODE=copy
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv venv --relocatable --python 3.13 /opt/venv
