@@ -57,6 +57,9 @@ COPY workflows/*.json /opt/ComfyUI/user/default/workflows/
 RUN git clone --depth=1 https://github.com/cubiq/ComfyUI_essentials /opt/ComfyUI/custom_nodes/ComfyUI_essentials
 RUN git clone --depth=1 https://github.com/kyuz0/ComfyUI-AMDGPUMonitor /opt/ComfyUI/custom_nodes/ComfyUI-AMDGPUMonitor
 RUN git clone --depth=1 https://github.com/city96/ComfyUI-GGUF /opt/ComfyUI/custom_nodes/ComfyUI-GGUF
+RUN --mount=type=cache,target=/root/.cache/uv \
+    uv pip install -r /opt/ComfyUI/custom_nodes/ComfyUI-GGUF/requirements.txt
+
 
 # Qwen Image Studio
 RUN git clone --depth=1 https://github.com/kyuz0/qwen-image-studio /opt/qwen-image-studio
