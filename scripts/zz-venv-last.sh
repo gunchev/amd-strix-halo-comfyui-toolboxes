@@ -1,4 +1,3 @@
-#!/usr/bin/env bash
 # Ensure /opt/venv/bin is first even if ~/.local/bin or ~/.cargo/bin prepend themselves via user dotfiles.
 
 _venv_path_fix() {
