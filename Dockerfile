@@ -73,6 +73,17 @@ RUN --mount=type=cache,target=/root/.cache/uv \
     opencv-python-headless diffusers tokenizers accelerate \
     imageio[ffmpeg] easydict ftfy dashscope imageio-ffmpeg decord librosa
 
+# Qwen3-TTS
+RUN --mount=type=cache,target=/var/cache/libdnf5/ \
+    dnf -y --setopt=keepcache=1 --setopt=install_weak_deps=False --nodocs install \
+    sox
+RUN git clone --depth=1 https://github.com/flybirdxx/ComfyUI-Qwen-TTS /opt/ComfyUI/custom_nodes/ComfyUI-Qwen-TTS
+RUN --mount=type=cache,target=/root/.cache/uv \
+    uv pip install -r /opt/ComfyUI/custom_nodes/ComfyUI-Qwen-TTS/requirements.txt && \
+    uv pip install --upgrade qwen-tts  # https://github.com/flybirdxx/ComfyUI-Qwen-TTS/issues/61
+# Warning: flash-attn is not installed. Will only run the manual PyTorch version. \
+#          Please install flash-attn for faster inference.
+
 # Permissions & trims (keep compilers/headers)
 RUN echo "Disk usage of /opt before cleanup = $(du -hs /opt | cut -f 1) / $(du -ks /opt | cut -f 1)K" && \
     chmod -R a+rwX /opt && chmod +x /opt/*.sh || true && \

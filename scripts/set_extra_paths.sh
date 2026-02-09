@@ -25,6 +25,7 @@ comfyui:
     loras: loras
     model_patches: model_patches
     photomaker: photomaker
+    qwen-tts: qwen-tts
     style_models: style_models
     text_encoders: text_encoders
     unet: unet
