@@ -82,11 +82,14 @@ COPY scripts/01-rocm-env-for-triton.sh /etc/profile.d/01-rocm-env-for-triton.sh
 
 # Banner script (runs on login). Use a high sort key so it runs after venv.sh and 01-rocm-env...
 COPY scripts/99-toolbox-banner.sh /etc/profile.d/99-toolbox-banner.sh
-RUN chmod 0644 /etc/profile.d/99-toolbox-banner.sh
 
 # Keep /opt/venv/bin first after user dotfiles
 COPY scripts/zz-venv-last.sh /etc/profile.d/zz-venv-last.sh
-RUN chmod 0644 /etc/profile.d/zz-venv-last.sh
+
+# Extra paths for models
+COPY scripts/set_extra_paths.sh /etc/profile.d/set_extra_paths.sh
+
+RUN chmod 0644 /etc/profile.d/*.sh
 
 # Disable core dumps in interactive shells (helps with recovering faster from ROCm crashes)
 RUN printf 'ulimit -S -c 0\n' > /etc/profile.d/90-nocoredump.sh && chmod 0644 /etc/profile.d/90-nocoredump.sh
