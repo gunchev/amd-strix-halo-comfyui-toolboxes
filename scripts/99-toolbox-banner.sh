@@ -2,7 +2,7 @@
 # Lightweight banner with machine/GPU and ROCm nightly version
 
 # Load ROCm env quietly if present
-[[ -f /etc/profile.d/01-rocm-env-for-triton.sh ]] && . /etc/profile.d/01-rocm-env-for-triton.sh
+[[ -f /etc/profile.d/01-rocm-envs.sh ]] && . /etc/profile.d/01-rocm-envs.sh
 
 oem_info() {
   local v="" m="" d lv lm

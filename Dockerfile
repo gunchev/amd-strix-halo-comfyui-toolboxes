@@ -71,7 +71,7 @@ RUN chmod -R a+rwX /opt && chmod +x /opt/*.sh || true && \
     dnf clean all && rm -rf /var/cache/dnf/*
 
 # Enable torch TORCH_ROCM_AOTRITON_ENABLE_EXPERIMENTAL
-COPY scripts/01-rocm-env-for-triton.sh /etc/profile.d/01-rocm-env-for-triton.sh
+COPY scripts/01-rocm-envs.sh /etc/profile.d/01-rocm-envs.sh
 
 # Banner script (runs on login). Use a high sort key so it runs after venv.sh and 01-rocm-env...
 COPY scripts/99-toolbox-banner.sh /etc/profile.d/99-toolbox-banner.sh
