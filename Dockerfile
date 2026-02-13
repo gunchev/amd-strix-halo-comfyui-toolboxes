@@ -41,7 +41,7 @@ WORKDIR /opt
 
 # Pin specific transformers version
 RUN --mount=type=cache,target=/root/.cache/uv \
-    uv pip install transformers==4.56.2
+    uv pip install gguf transformers==4.56.2
 
 # ComfyUI
 RUN git clone --depth=1 https://github.com/comfyanonymous/ComfyUI.git /opt/ComfyUI
@@ -52,6 +52,8 @@ RUN --mount=type=cache,target=/root/.cache/uv \
 
 COPY workflows/input/ai-server.jpg /opt/ComfyUI/input/
 COPY workflows/input/ai-server-2.png /opt/ComfyUI/input/
+COPY workflows/input/example2.jpg /opt/ComfyUI/input/
+
 COPY workflows/*.json /opt/ComfyUI/user/default/workflows/
 
 # ComfyUI plugins
@@ -79,7 +81,7 @@ RUN echo "Disk usage of /opt before cleanup = $(du -hs /opt | cut -f 1) / $(du -
     echo "Disk usage of /opt after cleanup =  $(du -hs /opt | cut -f 1) / $(du -ks /opt | cut -f 1)K"
 
 # Enable torch TORCH_ROCM_AOTRITON_ENABLE_EXPERIMENTAL
-COPY scripts/01-rocm-env-for-triton.sh /etc/profile.d/01-rocm-env-for-triton.sh
+COPY scripts/01-rocm-envs.sh /etc/profile.d/01-rocm-envs.sh
 
 # Banner script (runs on login). Use a high sort key so it runs after venv.sh and 01-rocm-env...
 COPY scripts/99-toolbox-banner.sh /etc/profile.d/99-toolbox-banner.sh

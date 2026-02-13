@@ -2,7 +2,7 @@
 # Lightweight banner with machine/GPU and ROCm nightly version
 
 # Load ROCm env quietly if present
-[[ -f /etc/profile.d/01-rocm-env-for-triton.sh ]] && . /etc/profile.d/01-rocm-env-for-triton.sh
+[[ -f /etc/profile.d/01-rocm-envs.sh ]] && . /etc/profile.d/01-rocm-envs.sh
 
 oem_info() {
   local v="" m="" d lv lm
@@ -87,4 +87,4 @@ echo
 printf 'SSH tip: ssh -L 8000:localhost:8000 user@host\n\n'
 
 # Aliases
-alias start_comfy_ui='cd /opt/ComfyUI && python main.py --port 8000 --output-directory $HOME/comfy-outputs --disable-mmap --cache-none --bf16-vae'
+alias start_comfy_ui='cd /opt/ComfyUI && python main.py --port 8000 --output-directory $HOME/comfy-outputs --disable-mmap --gpu-only --bf16-vae'
